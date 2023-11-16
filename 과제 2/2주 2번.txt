@@ -1,81 +1,87 @@
-#include <GL/glut.h>
+import OpenGL.GL as gl
+import OpenGL.GLU as glu
+import OpenGL.GLUT as glut
+import numpy as np
 
-void drawAxis() {
-    glBegin(GL_LINES);
-    glColor3f(1, 0, 0); glVertex3f(0, 0, 0); glVertex3f(6.5, 0, 0);
-    glColor3f(0, 1, 0); glVertex3f(0, 0, 0); glVertex3f(0, 4, 0);
-    glColor3f(0, 0, 1); glVertex3f(0, 0, 0); glVertex3f(0, 0, -8);
-    glEnd();
-}
+def drawAxis():
+  gl.glBegin(gl.GL_LINES)
+  gl.glColor3f(1, 0, 0)
+  gl.glVertex3f(0, 0, 0)
+  gl.glVertex3f(6.5, 0, 0)
 
-void drawPlane() {
-    glColor3f(1.0, 1.0, 1.0);
+  gl.glColor3f(0, 1, 0)
+  gl.glVertex3f(0, 0, 0)
+  gl.glVertex3f(0, 4, 0)
 
-    glBegin(GL_LINES);
-    for (GLfloat i = 0; i <= 6; i += 0.25) {
-        glVertex3f(i, 0, -6);
-        glVertex3f(i, 0, 0);
-        glVertex3f(6, 0, -i);
-        glVertex3f(0, 0, -i);
-    }
-    glEnd();
-}
+  gl.glColor3f(0, 0, 1)
+  gl.glVertex3f(0, 0, 0)
+  gl.glVertex3f(0, 0, -8)
+  gl.glEnd()
 
-void drawObjects() {
-    glPushMatrix();
-    glTranslatef(4.0, 0.0, -1.3);
-    glColor3f(138.0f / 255.0f, 43.0f / 255.0f, 226.0f / 255.0f);
-    glutSolidCube(0.75);
-    glPopMatrix();
+def drawPlane():
+  gl.glColor3f(1.0, 1.0, 1.0)  
 
-    glPushMatrix();
-    glTranslatef(1.5, 0.0, -3.3);
-    glRotatef(180.0, 0.0, 1.0, 0.0);
-    glColor3f(155.0f / 255.0f, 228.0f / 255.0f, 102.0f / 255.0f);
-    glutSolidTeapot(0.6);
-    glPopMatrix();
+  gl.glBegin(gl.GL_LINES)
+  for i in np.arange(0, 6.25, 0.25):
+    gl.glVertex3f(i, 0, -6)
+    gl.glVertex3f(i, 0, 0)  
+    gl.glVertex3f(6, 0, -i)
+    gl.glVertex3f(0, 0, -i)
+  gl.glEnd()
 
-    glPushMatrix();
-    glTranslatef(3.0, 0.0, -5.0);
-    glColor3f(248.0f / 255.0f, 155.0f / 255.0f, 0.0f / 255.0f);
-    glRotatef(-90.0f, 1.0f, 0.0f, 0.0f);
-    glutSolidCone(0.5, 1, 20, 20);
-    glPopMatrix();
-}
+def drawObjects():
+  # Cube
+  gl.glPushMatrix()
+  gl.glTranslatef(4.0, 0.0, -1.3)
+  gl.glColor3f(138/255, 43/255, 226/255)
+  glut.glutSolidCube(0.75)
+  gl.glPopMatrix()
 
-void display() {
-    glClear(GL_COLOR_BUFFER_BIT);
+  # Teapot 
+  gl.glPushMatrix()
+  gl.glTranslatef(1.5, 0.0, -3.3)
+  gl.glRotatef(180.0, 0.0, 1.0, 0.0) 
+  gl.glColor3f(155/255, 228/255, 102/255)
+  glut.glutSolidTeapot(0.6)
+  gl.glPopMatrix()
 
-    drawPlane();
-    drawAxis();
-    drawObjects();
+  # Cone
+  gl.glPushMatrix()
+  gl.glTranslatef(3.0, 0.0, -5.0)
+  gl.glColor3f(248/255, 155/255, 0/255)
+  gl.glRotatef(-90.0, 1.0, 0.0, 0.0)
+  glut.glutSolidCone(0.5, 1, 20, 20)
+  gl.glPopMatrix()
 
-    glFlush();
-}
+def display():
+  gl.glClear(gl.GL_COLOR_BUFFER_BIT)  
 
-void init() {
-    glClearColor(0.6, 0.6, 0.6, 1.0);
+  drawPlane()
+  drawAxis()
+  drawObjects()
 
-    glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
-    
-    // only Cube
-    gluPerspective(60.0, 4.0 / 3.0, 1.0, 6.5);
-    // only Teapot
-    // gluPerspective(60.0, 4.0 / 3.0, 6.8, 9.0);
-    // only Cone
-    // gluPerspective(60.0, 4.0 / 3.0, 9.0, 15.0);
+  glut.glutSwapBuffers()
 
-    gluLookAt(3, 3, 4.5, 3, -2, -20, 0, 1, 0);
-}
+def init():
+  gl.glClearColor(0.6, 0.6, 0.6, 1.0)
 
-int main(int argc, char** argv) {
-    glutInit(&argc, argv);
-    glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB);
-    glutInitWindowPosition(120, 80);
-    glutInitWindowSize(1280, 980);
-    glutCreateWindow("Viewing Volume");
-    glutDisplayFunc(display);
-    init();
-    glutMainLoop();
-}
+  gl.glMatrixMode(gl.GL_PROJECTION)
+  gl.glLoadIdentity()
+  
+  # Cube 
+  glu.gluPerspective(60, 4/3, 1, 6.5)
+  # Teapot
+  #glu.gluPerspective(60, 4/3, 6.8, 9) 
+  # Cone 
+  #glu.gluPerspective(60, 4/3, 9, 15)
+
+  glu.gluLookAt(3, 3, 4.5, 3, -2, -20, 0, 1, 0)
+
+glut.glutInit()
+glut.glutInitDisplayMode(glut.GLUT_DOUBLE | glut.GLUT_RGB) 
+glut.glutInitWindowPosition(120, 80)
+glut.glutInitWindowSize(1280, 980)
+glut.glutCreateWindow("Viewing Volume")
+glut.glutDisplayFunc(display)
+init()
+glut.glutMainLoop()
